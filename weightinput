@@ -1,0 +1,56 @@
+#include<stdio.h>
+#include<stdlib.h>
+typedef struct 
+{
+	char word;
+	int weight;
+	int left, right, parent;
+	int * code;
+}HalfNode;
+  
+//创建森林
+void creatForest(HalfNode *F,int n)
+{
+	char ch;
+	int w;
+	for (int i = 0; i < n; i++)
+	{
+		printf("请输入ch 和 w 的值：");
+		scanf("%c", &ch);
+		scanf("%d", &w);
+		F[i].weight = w;
+		F[i].left = F[i].right = F[i].parent = -1;
+	}
+	
+}
+ 
+//创建HalfmanTree
+void  creatHalfmanTree(HalfNode *F, int n)
+{
+	int loop, k1, k2,i;
+	for (loop = 0; loop < n - 1; loop++)
+	{
+		for (k1 = 0; k1 < n + loop && F[k1].parent != -1; k1++);
+		for (k2 = k1 + 1; k2 < n + loop && F[k2].parent != -1; k2++);
+		for (i = k2; i < n + loop; i++)
+		{
+			if (F[i].parent== -1)
+			{
+				if (F[i].weight < F[k1].weight)
+				{
+					k2 = k1;
+					k1 = i;
+				}
+				else
+					if (F[i].weight < F[k2].weight)
+						k2 = i;
+			}
+		}
+		F[i].word = 'X';
+		F[i].weight = F[k1].weight + F[i].weight;
+		F[i].left = k1;
+		F[i].right = k2;
+		F[i].parent = -1;
+		F[k1].parent = F[k2].parent = i;
+	}
+}
